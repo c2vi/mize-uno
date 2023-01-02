@@ -1,0 +1,3 @@
+[submodule "module/pymize"]
+	path = module/pymize
+	url = https://github.com/sewimoser/pymize.git
