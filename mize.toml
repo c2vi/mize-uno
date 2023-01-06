@@ -1,0 +1,15 @@
+
+[[render]]
+id = "UNO-Game"
+main = "render/game/public/main.js"
+webroot = "render/game/public"
+
+[[render]]
+id = "UNO-main"
+main = "render/main/public/main.js"
+webroot = "render/main/public"
+
+[[render]]
+id = "UNO-player"
+main = "render/player/public/main.js"
+webroot = "render/player/public"
