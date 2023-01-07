@@ -5,11 +5,11 @@ main = "render/game/public/main.js"
 webroot = "render/game/public"
 
 [[render]]
-id = "UNO-main"
-main = "render/main/public/main.js"
-webroot = "render/main/public"
+id = "UNO-Home"
+main = "render/home/public/main.js"
+webroot = "render/home/public"
 
 [[render]]
-id = "UNO-player"
+id = "UNO-Player"
 main = "render/player/public/main.js"
 webroot = "render/player/public"
