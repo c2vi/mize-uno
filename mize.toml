@@ -1,15 +1,15 @@
 
 [[render]]
-id = "UNO-Game"
+id = "uno-game"
 main = "render/game/public/main.js"
 webroot = "render/game/public"
 
 [[render]]
-id = "UNO-Home"
+id = "uno-home"
 main = "render/home/public/main.js"
 webroot = "render/home/public"
 
 [[render]]
-id = "UNO-Player"
+id = "uno-player"
 main = "render/player/public/main.js"
 webroot = "render/player/public"

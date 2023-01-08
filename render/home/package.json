@@ -3,10 +3,10 @@
 	"version": "1.0.0",
 	"license": "MIT",
 	"scripts": {
-		"dev": "webpack ./src",
-		"build": "webpack ./src"
+		"dev": "webpack --mode development ./src",
+		"build": "webpack --mode production ./src"
 	},
-	"main": "index.js",
+	"main": "src/index.js",
 	"devDependencies": {},
 	"dependencies": {
 		"@babel/plugin-transform-runtime": "^7.19.6",
