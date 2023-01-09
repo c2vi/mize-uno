@@ -4,7 +4,7 @@ import { Link } from 'react-scroll'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
-import unoongoinggame from '../assets/uno-ongoing-game.jpg'
+import unoongoinggame from '../../public/assets/uno-ongoing-game.png'
 
 const Landing = () => {
   // //just playing around

@@ -24,9 +24,9 @@ module.exports = {
      */
     filename: 'main.js',
   },
-  /** "target"
-   * setting "node" as target app (server side), and setting it as "web" is
-   * for browser (client side). Default is "web"
+  /** "target"get app (server side), and setting it as "web" is
+   * for browser (client
+   * setting "node" as tarside). Default is "web"
    */
   target: 'web',
   devServer: {
@@ -73,6 +73,20 @@ module.exports = {
         test: /\.(js|jsx)$/, //kind of file extension this rule should look for and apply in test
         exclude: /node_modules/, //folder to be excluded
         use: 'babel-loader', //loader which we are going to use
+      },
+      //testing image-webpack-loader
+      {
+        test: /\.(gif|png|jpe?g|svg)$/i,
+        use: [
+          'file-loader',
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              bypassOnDebug: true, // webpack@1.x
+              disable: true, // webpack@2.x and newer
+            },
+          },
+        ],
       },
     ],
   },

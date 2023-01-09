@@ -1,4 +1,4 @@
-import gamebg from '../assets/game-background.png'
+import gamebg from '../../public/assets/game-background.png'
 
 // just a temporary solution - want to handle this dynamic
 const PlayerHandler = (props) => {

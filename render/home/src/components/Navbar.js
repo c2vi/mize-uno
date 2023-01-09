@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import Navbarscrolls from './Navbarscrolls'
-import unologo from '../assets/uno-logo.png'
+import unologo from '../../public/assets/uno-logo.png'
 
 const Navbar = () => {
   return (
