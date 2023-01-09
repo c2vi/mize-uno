@@ -8,14 +8,10 @@ import Render from "./Render";
 let useItem = {}
 let useThisItem = {}
 
-const hi = "hi"
 const hello = "hello from index.js"
 
 class Test extends HTMLElement {
 	connectedCallback() {
-
-		const mountPoint = document.createElement('span');
-		this.attachShadow({ mode: 'open' }).appendChild(mountPoint);
 
 		//state with react-tracked ... doesn't work
 		//const itemState = () => useState({});
@@ -24,20 +20,62 @@ class Test extends HTMLElement {
 		//const ItemProvider = container.Provider
 		//const useShared = container.useTracked
 
-		this.items = {}
-		this.id = mize.id_to_render
 
 		//the hook for the item, we are rendering
-		useItem = () => {
-			if (arguments.length == 0){
-				const [state, setState] = useState({_id: "hi"})
-				this.items[this.id] = {item: state, setItem: setState}
+	}
+
+	getItemCallback(item_raw){
+
+		const mountPoint = document.createElement('span');
+		this.attachShadow({ mode: 'open' }).appendChild(mountPoint);
+
+		this.items = {}
+		this.item_raw = item_raw
+		this.id = mize.id_to_render
+
+		useItem = (ob) => {
+			if (!ob){
+				const [state, setState] = useState(item_raw.get_parsed())
+
+				//don't do updates the first time
+				if (!this.items[this.id]){
+					this.items[this.id] = {item: state, setItem: setState, do_updates: true, raw: this.item_raw}
+
+				} else {
+					//waiting for the unparse func to be finished
+					//this.items[this.id].raw.update(state)
+					
+					this.items[this.id].item = state
+					this.items[this.id].item = setState
+				}
+
 				return [state, setState]
 
-			} else {
-				//get another item
-				//TODO
-			}
+				//if useItem has a param
+				} else {
+					const [state, setState] = useState({})
+
+					//don't do updates the first time
+					if (!this.items[ob.id]){
+
+						this.items[ob.id] = {item: state, setItem: setState, do_updates: true}
+
+						//call get_item only the first time
+						mize.get_item(ob.id, (new_item) => {
+							this.items[new_item.id].raw = new_item
+							this.items[new_item.id].setItem(new_item.get_parsed())
+						})
+
+					} else {
+						//waiting for the unparse func to be finished
+						//this.items[this.id].raw.update(state)
+						
+						this.items[ob.id].item = state
+						this.items[ob.id].item = setState
+					}
+
+					return [state, setState]
+				}
 		}
 
 		//rendering to the webcomponent
@@ -48,12 +86,7 @@ class Test extends HTMLElement {
 				<Render />
 			//</ItemProvider>
 		);
-	}
 
-	getItemCallback(item_raw){
-		this.item_raw = item_raw
-		//this.items[item_raw.id].setItem((prev) => ({...prev, ...item_raw.get_parsed(), hi: "hello hi"}))
-		this.items[item_raw.id].setItem((prev) => ({ ...prev, ...item_raw.get_parsed()}));
 	}
 
 	updateCallback(update){
