@@ -43,7 +43,7 @@ class Test extends HTMLElement {
 
 				} else {
 					//waiting for the unparse func to be finished
-					//this.items[this.id].raw.update(state)
+					this.items[this.id].raw.update(state)
 					
 					this.items[this.id].item = state
 					this.items[this.id].item = setState
@@ -68,7 +68,7 @@ class Test extends HTMLElement {
 
 					} else {
 						//waiting for the unparse func to be finished
-						//this.items[this.id].raw.update(state)
+						this.items[this.id].raw.update(state)
 						
 						this.items[ob.id].item = state
 						this.items[ob.id].item = setState
