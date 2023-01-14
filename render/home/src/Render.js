@@ -2,7 +2,6 @@ import { useItem } from './index'
 
 //components
 import Landing from './pages/Landing'
-import Errors from './pages/Errors'
 
 const Render = () => {
   const [item, setItem] = useItem()
