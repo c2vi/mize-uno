@@ -5,6 +5,7 @@ import Landing from './pages/Landing'
 
 const Render = () => {
   const [item, setItem] = useItem()
+  console.log(useItem())
   pr(item)
   function update_cards() {
     setItem((prev) => ({
