@@ -1,4 +1,5 @@
 import { useItem } from './index'
+import React from 'react'
 
 //components
 import Landing from './pages/Landing'
