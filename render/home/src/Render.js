@@ -1,73 +1,98 @@
 import React from 'react'
+import './index.css'
 import { useState } from 'react'
-import "./index.css"
 
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
 import { useItem, useItems, getItem, id } from './index'
+
+const unologo =
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/UNO_Logo.svg/2560px-UNO_Logo.svg.png'
 
 const unoongoinggame =
   'https://www.thesprucecrafts.com/thmb/W7vX1ntLjL6UksyxBXmFFIcB4Ak=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/how-to-play-uno-4169919-hero-2c26a4843b9d4d908e760df80687e445.jpg'
 
+const Navbar = () => {
+  return (
+    <>
+      <header>
+        <div className='w-full h-20 z-10 bg-white'>
+          <div className='flex justify-between items-center w-full h-full'>
+            <div className='flex items-center mx-40'>
+              <button
+                type='button'
+                className='scale-90 hover:scale-100 duration-300'
+              >
+                <img src={unologo} alt='logo' className='h-16 w-[h*1.43]' />
+              </button>{' '}
+              <div className='pl-10 text-lg font-semibold mr-4 drop-shadow-md text-gray-500 hover:text-gray-900 scale-90 hover:scale-100 duration-500'>
+                <button type='button'>Games</button>
+              </div>
+            </div>
+            <div className='pr-40'>
+              <button className='font-semibold px-5 py-2 rounded-md  text-blue-500 bg-slate-200 hover:text-white hover:bg-blue-500 duration-500 drop-shadow-md hover:drop-shadow-lg  bg-transparent mr-4'>
+                Log In
+              </button>
+              <button className='font-semibold px-5 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600 drop-shadow-md hover:drop-shadow-lg duration-300 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'>
+                Sign Up
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+    </>
+  )
+}
+
+const Footer = () => {
+  const d = new Date()
+  let year = d.getFullYear()
+
+  return (
+    <>
+      <footer>
+        <div className='p-4 rounded-lg shadow md:items-center md:p-6 bg-gray-100'>
+          <div className='text-md font-semibold sm:text-center text-gray-400'>
+            <article className='flex flex-wrap justify-center'>
+              <span className='w-1/3'>© UNO-Online ABC &nbsp; {year}</span>
+              <span className='w-1/3'>
+                <button className='hover:text-gray-600'>Legal</button>
+              </span>
+              <span className='w-1/3'>
+                <button className='hover:text-gray-600'>Terms of Use</button>
+              </span>
+            </article>
+          </div>
+        </div>
+      </footer>
+    </>
+  )
+}
+
 const Landing = () => {
-  // //just playing around
-
-  // const [lobbyid, setLobbyID] = useState(1)
-  // const [activeplayers, setActivePlayers] = useState(1)
-
-  // const lobbyHandler = () => {
-  //   setLobbyID((prevState) => {
-  //     prevState = lobbyid + 1
-  //     return prevState
-  //   })
-  // }
-
-  // const activePlayersHandler = () => {
-  //   setActivePlayers((prevState) => {
-  //     if (activeplayers < 10) {
-  //       prevState = activeplayers + 1
-  //       return prevState
-  //     } else {
-  //       prevState = activeplayers
-  //       return prevState
-  //     }
-  //   })
-  // }
-
-
-  const [item, setItem] = useItem();
-	
+  const [item, setItem] = useItem()
+  const [search, setSearch] = useState('')
   const [games, setGames, addGames] = useItems()
 
-	pr("games", games)
+  if (item.games) {
+    addGames(item.games)
+  }
 
-	if (item.games){
-		addGames(item.games)
-	}
+  pr('games', games)
 
-  const [search, setSearch] = useState('')
-
-	//let game_ids = items[id].games
+  //let game_ids = items[id].games
 
   const FilterHandler = (props) => {
-	  const game = props.props
+    const game = props.props
     if (game.id % 2 === 0) {
       return (
         <tr key={game._id} className='flex flex-wrap justify-center w-full'>
-          <td className='bg-red-200 font-normal w-1/6 border'>
-            {game._id}
-          </td>
-          <td className='bg-red-200 font-normal w-1/4 border'>
-            {game.name}
-          </td>
+          <td className='bg-red-200 font-normal w-1/6 border'>{game._id}</td>
+          <td className='bg-red-200 font-normal w-1/4 border'>{game.name}</td>
         </tr>
       )
     } else {
       return (
         <tr key={game._id} className='flex flex-wrap justify-center w-full'>
-          <td className='bg-yellow-100 font-normal w-1/6 border'>
-            {game._id}
-          </td>
+          <td className='bg-yellow-100 font-normal w-1/6 border'>{game._id}</td>
           <td className='bg-yellow-100 font-normal w-1/4 border'>
             {game.name}
           </td>
@@ -79,6 +104,7 @@ const Landing = () => {
   return (
     <>
       <Navbar />
+
       {/* Hero */}
       <main>
         <div className='text-center relative bg-white overflow-hidden'>
@@ -107,9 +133,7 @@ const Landing = () => {
                     </span>
                     <br />
                     <button className='py-3 px-2 bg-green-300 rounded-md font-bold text-2xl tracking-tighter shadow-lg hover:shadow-xl scale-90 hover:scale-100 duration-300'>
-                      <span className='text-white'>
-                          PLAY NOW
-                      </span>
+                      <span className='text-white'>PLAY NOW</span>
                     </button>
                   </h1>
                 </div>
@@ -183,30 +207,29 @@ const Landing = () => {
                 </div>
               </div>
               <table className='w-full'>
-	  				<tbody>
-                <tr className='flex flex-wrap justify-center'>
-                  {/* <td> & 'font-bold' is just a temporary solution (couldn't figure out why it doesn't work with <th>) */}
-                  <td className='w-1/6 font-bold border'>Game-ID</td>
-                  <td className='w-1/4 font-bold border'>Game-Name</td>
-                </tr>
-	  				</tbody>
+                <tbody>
+                  <tr className='flex flex-wrap justify-center'>
+                    <td className='w-1/6 font-bold border'>Game-ID</td>
+                    <td className='w-1/4 font-bold border'>Game-Name</td>
+                  </tr>
+                </tbody>
               </table>
               <div>
-	  				<table>
-	  				<tbody>
-                {Object.values(games)
-                  .filter((game) => {
-                    return search.toLowerCase() === ''
-                      ? game
-                      : game.name.toLowerCase().includes(search)
-                  })
-                  .map((game) => (
-                    <>
-                      <FilterHandler props={game} />
-                    </>
-                  ))}
-	  				</tbody>
-	  				</table>
+                <table>
+                  <tbody>
+                    {Object.values(games)
+                      .filter((game) => {
+                        return search.toLowerCase() === ''
+                          ? game
+                          : game.name.toLowerCase().includes(search)
+                      })
+                      .map((game) => (
+                        <>
+                          <FilterHandler props={game} />
+                        </>
+                      ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -219,7 +242,3 @@ const Landing = () => {
 }
 
 export default Landing
-
-
-
-
