@@ -13,215 +13,214 @@ let id = mize.id_to_render
 const hello = 'hello from index.js'
 
 class Test extends HTMLElement {
-  connectedCallback() {
-  }
+  connectedCallback() {}
 
   getItemCallback(item_raw) {
     this.item = item_raw
 
     const mountPoint = document.createElement('span')
-	 this.appendChild(mountPoint)
+    this.appendChild(mountPoint)
 
-	 this.old_items_len = 0
+    this.old_items_len = 0
 
     this.do_not_send_update = {}
     this.id = mize.id_to_render
     this.items = {}
 
-	const state = {}
-	state[this.id] = this.item.get_parsed()
+    const state = {}
+    state[this.id] = this.item.get_parsed()
 
-	useItem = (id, initial = {}) => {
+    useItem = (id, initial = {}) => {
+      if (id == undefined) {
+        id = this.id
+      }
 
-		if (id == undefined){id = this.id}
+      //####### Support that the first param is the initial
+      //does not work yet
+      //if (typeof(id_or_initial) == "string"){
+      //id = id_or_initial
+      //} else {
+      //initial = id_or_initial
+      //}
 
-		//####### Support that the first param is the initial
-		//does not work yet
-		//if (typeof(id_or_initial) == "string"){
-			//id = id_or_initial
-		//} else {
-			//initial = id_or_initial
-		//}
+      //the item rendered by this render
+      const [state, setState] = useState(initial)
 
-		//the item rendered by this render
-		const [state, setState] = useState(initial)
+      //do some things only the first time
+      if (state == initial) {
+        this.items[id] = { item: state, setItem: setState, do_updates: true }
+        this.do_not_send_update[id] = false
+        let set_item = this.items[id].setItem
 
-		//do some things only the first time
-		if (state == initial){
+        //call get_item only the first time
+        mize.get_item(id, (new_item) => {
+          this.items[new_item.id].raw = new_item
+          this.do_not_send_update[new_item.id] = true
+          this.items[new_item.id].setItem(new_item.get_parsed())
+        })
 
-			this.items[id] = {item: state, setItem: setState, do_updates: true}
-			this.do_not_send_update[id] = false
-			let set_item = this.items[id].setItem
+        if (!mize.update_callbacks[id]) {
+          mize.update_callbacks[id] = []
+        }
+        mize.update_callbacks[id].push((update) => {
+          this.do_not_send_update[update.now.id] = true
+          this.items[update.now.id].raw = update.now
+          set_item(update.now.get_parsed())
+        })
+      } else {
+        if (!this.do_not_send_update[id]) {
+          if (this.items[id].raw) {
+            this.items[id].raw.update(state)
+          }
+        } else {
+          this.do_not_send_update[id] = false
+        }
 
-			//call get_item only the first time
-			mize.get_item(id, (new_item) => {
-				this.items[new_item.id].raw = new_item
-				this.do_not_send_update[new_item.id] = true
-				this.items[new_item.id].setItem(new_item.get_parsed())
-			})
+        this.items[id].item = state
+        this.items[id].item = setState
+      }
 
-			if (!mize.update_callbacks[id]) {mize.update_callbacks[id] = []}
-			mize.update_callbacks[id].push((update) => {
-				this.do_not_send_update[update.now.id] = true
-				this.items[update.now.id].raw = update.now
-				set_item(update.now.get_parsed())
-			})
+      return [state, setState]
+    }
 
-		} else {
-			if (!this.do_not_send_update[id]){
-				if (this.items[id].raw) {
-					this.items[id].raw.update(state)
-				}
-			} else {
-				this.do_not_send_update[id] = false
-			}
-			
-			this.items[id].item = state
-			this.items[id].item = setState
-		}
+    this.useItems_hooks = {}
+    this.useItems_num = 0
 
-		return [state, setState]
-	}
+    useItems = (ids, initial = {}) => {
+      //if a single id was passed as a string, or no id was passed at all
+      if (!ids) {
+        ids = []
+      } else if (!ids.length) {
+        //ids is not an array
+        ids = [ids]
+      }
 
-	
-	this.useItems_hooks = {}
-	this.useItems_num = 0
+      initial._use_items_id = 0
 
-	useItems = (ids, initial = {}) => {
-		//if a single id was passed as a string, or no id was passed at all
-		if (!ids){
-			ids = []
-		} else if (!ids.length) {
-			//ids is not an array
-			ids = [ids]
-		}
+      const [items, setItems] = useState(initial)
 
-		initial._use_items_id = 0
+      let hook = {}
 
-		const [items, setItems] = useState(initial)
+      hook.ids = ids
+      if (items != initial) {
+        hook = this.useItems_hooks[items._use_items_id]
+      }
 
+      //only the first time of every hook
+      if (items == initial) {
+        items._use_items_id = this.useItems_num
+        this.useItems_num += 1
 
-		let hook = {}
+        this.useItems_hooks[items._use_items_id] = hook
 
-		hook.ids = ids
-		if (items != initial){
-			hook = this.useItems_hooks[items._use_items_id]
-		}
+        hook.raw_items = {}
+        hook.do_not_send_update = {}
 
-		//only the first time of every hook
-		if (items == initial) {
-			items._use_items_id = this.useItems_num
-			this.useItems_num += 1
+        //get those initial items, whoose ids are in ids
+        let items_gotten = {}
 
-			this.useItems_hooks[items._use_items_id] = hook
+        for (const id of hook.ids) {
+          mize.get_item(id, (new_item) => {
+            items_gotten[id] = new_item
 
-			hook.raw_items = {}
-			hook.do_not_send_update = {}
+            //if we have gotten all items, then call setItems
+            if (Object.keys(items_gotten).length == hook.ids.length) {
+              setItems((prev) => {
+                let now = { ...prev }
+                for (const id of hook.ids) {
+                  hook.raw_items[id] = items_gotten[id]
+                  hook.do_not_send_update[id] = true
+                  now[id] = items_gotten[id].get_parsed()
+                }
+                return now
+              })
+            }
+          })
 
-			//get those initial items, whoose ids are in ids
-			let items_gotten = {}
+          //register update_callbacks for all those items
+          if (!mize.update_callbacks[id]) {
+            mize.update_callbacks[id] = []
+          }
+          mize.update_callbacks[id].push((update) => {
+            hook.do_not_send_update[update.now.id] = true
+            hook.raw_items[update.now.id] = update.now
+            setItems((prev) => {
+              let now = { ...prev }
+              now[id] = update.now.get_parsed()
+              return now
+            })
+          })
+        }
+      } else {
+        window.tmp = items
+        for (const id of hook.ids) {
+          if (!hook.do_not_send_update[id]) {
+            if (hook.raw_items[id]) {
+              hook.raw_items[id].update(items[id])
+            } else {
+            }
+          } else {
+            hook.do_not_send_update[id] = false
+          }
+        }
+      }
 
-			for (const id of hook.ids){
-				mize.get_item(id, (new_item) =>{
-					items_gotten[id] = new_item
+      //hook.setItems = setItems
+      //hook.initial_items_gotten = false
 
-					//if we have gotten all items, then call setItems
-					if (Object.keys(items_gotten).length == hook.ids.length){
-						setItems((prev) => {
-							let now = {...prev}
-							for (const id of hook.ids){
-								hook.raw_items[id] = items_gotten[id]
-								hook.do_not_send_update[id] = true
-								now[id] = items_gotten[id].get_parsed()
-							}
-							return now
-						})
-					}
-				})
+      const addItems = (ids) => {
+        //if a single id was passed as a string
+        if (!ids.length) {
+          ids = [ids]
+        }
 
-				//register update_callbacks for all those items
-				if (!mize.update_callbacks[id]) {mize.update_callbacks[id] = []}
-				mize.update_callbacks[id].push((update) => {
-					hook.do_not_send_update[update.now.id] = true
-					hook.raw_items[update.now.id] = update.now
-					setItems((prev) => {
-						let now = {...prev}
-						now[id] = update.now.get_parsed()
-						return now
-					})
-				})
+        ids = ids.filter((id_ids) => {
+          let id = hook.ids.find((id_hook) => id_hook === id_ids)
+          return !id
+        })
 
-			}
+        hook.ids = [...hook.ids, ...ids]
 
-		} else {
-			window.tmp = items
-			for (const id of hook.ids){
-				if (!hook.do_not_send_update[id]){
-					if (hook.raw_items[id]) {
-						hook.raw_items[id].update(items[id])
-					} else {
-					}
-				} else {
-					hook.do_not_send_update[id] = false
-				}
-			}
-		}
+        let items_gotten = {}
 
-		//hook.setItems = setItems
-		//hook.initial_items_gotten = false
+        for (const id of ids) {
+          mize.get_item(id, (new_item) => {
+            items_gotten[id] = new_item
 
-		const addItems = (ids) => {
-			//if a single id was passed as a string
-			if (!ids.length) {
-				ids = [ids]
-			}
+            //if we have gotten all items, then call setItems
+            if (Object.keys(items_gotten).length == ids.length) {
+              setItems((prev) => {
+                let now = { ...prev }
+                for (const id of ids) {
+                  hook.raw_items[id] = items_gotten[id]
+                  now[id] = items_gotten[id].get_parsed()
+                  hook.do_not_send_update[id] = true
+                }
+                return now
+              })
+            }
 
-			ids = ids.filter((id_ids) => {
-				let id = hook.ids.find(id_hook => id_hook === id_ids)
-				return !id
-			})
+            // register update_callbacks for those newly gotten items
+            if (!mize.update_callbacks[id]) {
+              mize.update_callbacks[id] = []
+            }
+            mize.update_callbacks[id].push((update) => {
+              hook.do_not_send_update[update.now.id] = true
+              hook.raw_items[update.now.id] = update.now
+              setItems((prev) => {
+                let now = { ...prev }
+                now[id] = update.now.get_parsed()
+                return now
+              })
+            })
+          })
+        }
+      }
 
-			hook.ids = [...hook.ids, ...ids]
-
-			let items_gotten = {}
-
-			for (const id of ids){
-				mize.get_item(id, (new_item) =>{
-					items_gotten[id] = new_item
-
-					//if we have gotten all items, then call setItems
-					if (Object.keys(items_gotten).length == ids.length){
-						setItems((prev) => {
-							let now = {...prev}
-							for (const id of ids){
-								hook.raw_items[id] = items_gotten[id]
-								now[id] = items_gotten[id].get_parsed()
-								hook.do_not_send_update[id] = true
-							}
-							return now
-						})
-					}
-
-					// register update_callbacks for those newly gotten items
-					if (!mize.update_callbacks[id]) {mize.update_callbacks[id] = []}
-					mize.update_callbacks[id].push((update) => {
-						hook.do_not_send_update[update.now.id] = true
-						hook.raw_items[update.now.id] = update.now
-						setItems((prev) => {
-							let now = {...prev}
-							now[id] = update.now.get_parsed()
-							return now
-						})
-					})
-				})
-			}
-		}
-
-		this.useItems_hooks[initial.__proto__.use_items_id] = hook
-		delete items._use_items_id
-		return [items, setItems, addItems]
-
-	}
+      this.useItems_hooks[initial.__proto__.use_items_id] = hook
+      delete items._use_items_id
+      return [items, setItems, addItems]
+    }
 
     //rendering to the webcomponent
     const root = createRoot(mountPoint) // createRoot(container!) if you use TypeScript
@@ -236,19 +235,22 @@ class Test extends HTMLElement {
   updateCallback(update) {
     //this.item = update.now
     //this.setItems((prev) => {
-		 //let new_state = prev
-		 //new_state[update.now.id] = update.now.get_parsed()
-		 //return new_state
-	 //})
+    //let new_state = prev
+    //new_state[update.now.id] = update.now.get_parsed()
+    //return new_state
+    //})
 
-	if (this.items[update.now.id]){
-		this.item_raw = update.now
-		this.items[update.now.id].raw = update.now
-		this.do_not_send_update[update.now.id] = true
-		this.items[update.now.id].setItem((prev) => ({ ...prev, ...update.now.get_parsed()}));
-	}
+    if (this.items[update.now.id]) {
+      this.item_raw = update.now
+      this.items[update.now.id].raw = update.now
+      this.do_not_send_update[update.now.id] = true
+      this.items[update.now.id].setItem((prev) => ({
+        ...prev,
+        ...update.now.get_parsed(),
+      }))
+    }
   }
 }
 
-export {getItem, useItems, useItem, id}
+export { getItem, useItems, useItem, id }
 mize.defineRender(Test)

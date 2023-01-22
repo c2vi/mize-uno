@@ -1,5 +1,5 @@
-//import { Link } from 'react-router-dom'
-//<Link to='/'>4+</Link>
+// import { Link } from 'react-router-dom'
+// <Link to='/'>4+</Link>
 
 const E404 = () => {
   return (
