@@ -4,38 +4,14 @@ import { useState } from 'react'
 
 import { useItem, useItems, getItem, id } from './index'
 
-import Test from './Test'
+import Test from './components/Test'
+import Footer from './Footer'
 
 const unologo =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/UNO_Logo.svg/2560px-UNO_Logo.svg.png'
 
 const unoongoinggame =
   'https://www.thesprucecrafts.com/thmb/W7vX1ntLjL6UksyxBXmFFIcB4Ak=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/how-to-play-uno-4169919-hero-2c26a4843b9d4d908e760df80687e445.jpg'
-
-const Footer = () => {
-  const d = new Date()
-  let year = d.getFullYear()
-
-  return (
-    <>
-      <footer>
-        <div className='p-4 rounded-lg shadow md:items-center md:p-6 bg-gray-100'>
-          <div className='text-md font-semibold sm:text-center text-gray-400'>
-            <article className='flex flex-wrap justify-center'>
-              <span className='w-1/3'>© UNO-Online ABC &nbsp; {year}</span>
-              <span className='w-1/3'>
-                <button className='hover:text-gray-600'>Legal</button>
-              </span>
-              <span className='w-1/3'>
-                <button className='hover:text-gray-600'>Terms of Use</button>
-              </span>
-            </article>
-          </div>
-        </div>
-      </footer>
-    </>
-  )
-}
 
 const Navbar = () => {
   return (
