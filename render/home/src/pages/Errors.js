@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+//import { Link } from 'react-router-dom'
+              //<Link to='/'>4+</Link>
 
 const Errors = () => {
   return (
@@ -15,7 +16,6 @@ const Errors = () => {
           </span>
           <button type='button' className='hover:scale-125 duration-200'>
             <span className='pl-2 font-semibold text-lg'>
-              <Link to='/'>4+</Link>
             </span>
           </button>
         </div>

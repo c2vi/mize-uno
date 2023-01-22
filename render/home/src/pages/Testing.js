@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+//import { Link } from 'react-router-dom'
+        //<Link to='/'>Landing</Link>
 
 const Testing = () => {
   const [lobbyid, setLobbyID] = useState(1)
@@ -20,7 +21,6 @@ const Testing = () => {
   return (
     <section className='ml-10 mt-5'>
       <button type='button' className=''>
-        <Link to='/'>Landing</Link>
       </button>
       <h1 className='text-3xl font-bold mb-10'>Welcome to !UNO</h1>
       <h2 className='text-2xl font-bold'>Server-List</h2>

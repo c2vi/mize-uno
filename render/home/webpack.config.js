@@ -69,6 +69,11 @@ module.exports = {
      * being searched"
      */
     rules: [
+ 		{
+			test: /\.css$/i,
+			//include: path.resolve(__dirname, 'src'),
+			use: ['style-loader', 'css-loader', 'postcss-loader'],
+		},
       {
         test: /\.(js|jsx)$/, //kind of file extension this rule should look for and apply in test
         exclude: /node_modules/, //folder to be excluded
