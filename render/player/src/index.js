@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 //import reactDom from "react-dom";
 import { createRoot } from 'react-dom/client'
-import Landing from './Render'
+import Game from './Render'
 //import { createContainer } from 'react-tracked';
 
 let useItems = {}
@@ -227,7 +227,7 @@ class Test extends HTMLElement {
 
     root.render(
       //<ItemProvider>
-      <Landing />
+      <Game />
       //</ItemProvider>
     )
   }
