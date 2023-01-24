@@ -137,22 +137,21 @@ const Landing = () => {
     addGames(item.games)
   }
 
-  pr('games', games)
-
-  //let game_ids = items[id].games
-
   const FilterHandler = (props) => {
-    const game = props.props
-    if (game.id % 2 === 0) {
+    const game = props.props // game must contain: _id uint
+    pr('game', game)
+    pr('game._id', game._id)
+
+    if (game._id % 2 === 0) {
       return (
-        <tr key={game._id} className='flex flex-wrap justify-center w-full'>
+        <tr key={game._id} className='flex flex-wrap justify-center'>
           <td className='bg-red-200 font-normal w-1/6 border'>{game._id}</td>
           <td className='bg-red-200 font-normal w-1/4 border'>{game.name}</td>
         </tr>
       )
     } else {
       return (
-        <tr key={game._id} className='flex flex-wrap justify-center w-full'>
+        <tr key={game._id} className='flex flex-wrap justify-center'>
           <td className='bg-yellow-100 font-normal w-1/6 border'>{game._id}</td>
           <td className='bg-yellow-100 font-normal w-1/4 border'>
             {game.name}
@@ -247,7 +246,7 @@ const Landing = () => {
               </tbody>
             </table>
             <div>
-              <table>
+              <table className='w-full'>
                 <tbody>
                   {Object.values(games)
                     .filter((game) => {
