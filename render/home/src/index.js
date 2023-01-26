@@ -170,7 +170,7 @@ class Test extends HTMLElement {
 
       const addItems = (ids) => {
         //if a single id was passed as a string
-        if (!ids.length) {
+        if (typeof ids === 'string') {
           ids = [ids]
         }
 
