@@ -143,9 +143,6 @@ const Landing = () => {
     addGames(item.games)
   }
 
-  // const [item0, setitem0] = useItem(0)
-  // pr('0', item0)
-
   const clickHandler = (e, id) => {
     mize.render_item(id)
   }
@@ -156,7 +153,7 @@ const Landing = () => {
   const testTest = (e) => {
     setItem((prev) => ({
       ...prev,
-      games: [prev.games, prev.next_free_game_id],
+      games: [...prev.games, prev.next_free_game_id],
       // [prev.next_free_game_id],
     }))
     setItem((prev) => ({
