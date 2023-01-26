@@ -150,22 +150,21 @@ const Landing = () => {
   pr('games', games)
   pr('item', item)
 
+  // problem: reloading - games-item doesn't gets deleted (databse)
+  // the rest should be fixed now
   const testTest = (e) => {
     setItem((prev) => ({
       ...prev,
-      games: [...prev.games, prev.next_free_game_id],
-      // [prev.next_free_game_id],
+      games: [...prev.games, prev.next_free_game_id], // an empty arr can be passed in: []
     }))
     setItem((prev) => ({
       ...prev,
       next_free_game_id: parseInt(prev.next_free_game_id) + 1,
     }))
-    // pr('next_free_game_id', item.next_free_game_id)
     setItem((prev) => ({
       ...prev,
       next_free_player_id: parseInt(prev.next_free_player_id) + 1,
     }))
-    // pr('next_free_player_id', item.next_free_player_id)
   }
 
   const FilterHandler = (props) => {
