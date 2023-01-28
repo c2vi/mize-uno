@@ -1,4 +1,4 @@
-
+gitignore
 render/game/node_modules
 render/home/node_modules
 render/player/node_modules
