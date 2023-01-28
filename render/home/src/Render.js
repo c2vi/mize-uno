@@ -89,10 +89,16 @@ const Navbar = () => {
               <Navbarscrolls highlighted='games' />
             </div>
             <div className='pr-40'>
-              <button className='font-semibold px-5 py-2 rounded-md  text-blue-500 bg-slate-200 hover:text-white hover:bg-blue-500 duration-500 drop-shadow-md hover:drop-shadow-lg  bg-transparent mr-4'>
+              <button
+                type='button'
+                className='font-semibold px-5 py-2 rounded-md  text-blue-500 bg-slate-200 hover:text-white hover:bg-blue-500 duration-500 drop-shadow-md hover:drop-shadow-lg  bg-transparent mr-4'
+              >
                 Log In
               </button>
-              <button className='font-semibold px-5 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600 drop-shadow-md hover:drop-shadow-lg duration-300 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'>
+              <button
+                type='button'
+                className='font-semibold px-5 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600 drop-shadow-md hover:drop-shadow-lg duration-300 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'
+              >
                 Sign Up
               </button>
             </div>
@@ -137,16 +143,46 @@ const Landing = () => {
     addGames(item.games)
   }
 
+  const clickHandler = (e, id) => {
+    mize.render_item(id)
+  }
+
+  pr('games', games)
+  pr('item', item)
+
+  // problem: reloading - games-item doesn't gets deleted (databse)
+  // the rest should be fixed now
+  const testTest = (e) => {
+    setItem((prev) => ({
+      ...prev,
+      games: [...prev.games, prev.next_free_game_id], // an empty arr can be passed in: []
+    }))
+    setItem((prev) => ({
+      ...prev,
+      next_free_game_id: parseInt(prev.next_free_game_id) + 1,
+    }))
+    setItem((prev) => ({
+      ...prev,
+      next_free_player_id: parseInt(prev.next_free_player_id) + 1,
+    }))
+  }
+
   const FilterHandler = (props) => {
     const game = props.props // game must contain: _id uint
-    pr('game', game)
-    pr('game._id', game._id)
 
     if (game._id % 2 === 0) {
       return (
         <tr key={game._id} className='flex flex-wrap justify-center'>
           <td className='bg-red-200 font-normal w-1/6 border'>{game._id}</td>
-          <td className='bg-red-200 font-normal w-1/4 border'>{game.name}</td>
+          <td className='bg-red-200 font-normal w-1/4 border'>
+            <button
+              onClick={(e) => clickHandler(e, game._id)}
+              type='button'
+              className='hover:underline duration-300'
+            >
+              {game.name}
+            </button>
+          </td>
         </tr>
       )
     } else {
@@ -154,7 +190,13 @@ const Landing = () => {
         <tr key={game._id} className='flex flex-wrap justify-center'>
           <td className='bg-yellow-100 font-normal w-1/6 border'>{game._id}</td>
           <td className='bg-yellow-100 font-normal w-1/4 border'>
-            {game.name}
+            <button
+              type='button'
+              onClick={(e) => clickHandler(e, game._id)}
+              className='hover:underline'
+            >
+              {game.name}
+            </button>
           </td>
         </tr>
       )
@@ -221,20 +263,29 @@ const Landing = () => {
             <div>
               <div className='flex flex-wrap justify-center w-full pb-2'>
                 {/* Search option just for Lobby-Name */}
+                <div className='w-3/12' />
                 <div className='relative w-5/12'>
                   <div className='flex absolute inset-y-0 left-0 items-center pl-3'>
                     {searchlens}
                   </div>
                   <input
-                    type='search'
-                    id='search'
                     onChange={(e) => setSearch(e.target.value)}
+                    id='search'
+                    type='search'
                     placeholder='Search'
                     className='p-2 pl-10 w-full text-sm font-medium text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-                    required
                   />
                 </div>
-                {/* <div className='w-1/2' /> */}
+                <div className='w-2/12 flex flex-wrap justify-center'>
+                  <button
+                    onClick={(e) => testTest(e)}
+                    type='button'
+                    className='text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:outline-none font-bold rounded-lg text-md px-4 py-2 scale-90 hover:scale-100 duration-700'
+                  >
+                    CREATE GAME
+                  </button>
+                </div>
+                <div className='w-1/12' />
               </div>
             </div>
             <table className='w-full'>
