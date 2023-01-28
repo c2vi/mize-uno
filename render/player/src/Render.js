@@ -4,6 +4,8 @@ import { useState } from 'react'
 
 import { useItem, useItems, getItem, id } from './index'
 
+import cards from './cards'
+
 // just a temporary solution - want to handle this dynamic
 const gamebg =
   'https://1.bp.blogspot.com/-CUGrjTz--uk/YKexcWh29nI/AAAAAAAAh4M/HslKXMPNl7AI42WH7sNMKMgjkS_KJLSoQCLcBGAsYHQ/s1920/V1-CUTE-TROPICAL-DESKTOP-WALLPAPER-HD.png'
@@ -107,8 +109,13 @@ const Game = () => {
       cards_of_player: prev.cards_of_player + ['green_5'],
     }))
   }
+
   return (
     <>
+      {/* check if all cards are correct */}
+      {/* {cards.map((item) => {
+        return <div>{item.svg}</div>
+      })} */}
       <div className='relative'>
         <img
           type='image'
