@@ -6,6 +6,8 @@ import { useItem, useItems, getItem, id } from './index'
 
 import cards from './cards'
 
+let pr = console.log
+
 // just a temporary solution - want to handle this dynamic
 const gamebg =
   'https://1.bp.blogspot.com/-CUGrjTz--uk/YKexcWh29nI/AAAAAAAAh4M/HslKXMPNl7AI42WH7sNMKMgjkS_KJLSoQCLcBGAsYHQ/s1920/V1-CUTE-TROPICAL-DESKTOP-WALLPAPER-HD.png'
@@ -27,7 +29,16 @@ const player_data = [
   {
     player_id: 3,
     player_name: 'sophia',
-    player_cards: ['red_3', 'blue_6', 'green_8', 'yellow_1'],
+    player_cards: [
+      'red_3',
+      'blue_2',
+      'green_8',
+      'yellow_1',
+      'red_3',
+      'blue_2',
+      'green_8',
+      'yellow_1',
+    ],
     player_active: 'yes',
   },
 ]
@@ -73,31 +84,70 @@ const PlayerList = () => {
 }
 
 const CardInMiddle = () => {
-  let card_in_middle = game_data[0].card_in_middle
-  // pr("middle-card", game_data[0].card_in_middle)
-  return card_in_middle
+  let game_card = game_data[0].card_in_middle
+  let card_in_middle
+
+  cards.map((card) => {
+    if (card.name === game_card) {
+      card_in_middle = card.svg
+    } else {
+    }
+  })
+  return <div className='rotate-90 drop-shadow-md'>{card_in_middle}</div>
 }
 
 const LeaveButton = () => {
   return (
     <>
-      <div>
-        <button
-          type='button'
-          className='py-3 px-4 bg-red-300 rounded-md font-bold text-2xl tracking-tighter shadow-lg hover:shadow-xl scale-90 hover:scale-100 duration-300'
-        >
-          LEAVE
-        </button>
-      </div>
+      <button
+        type='button'
+        className='py-3 px-4 bg-red-300 rounded-md font-bold text-2xl tracking-tighter shadow-lg hover:shadow-xl scale-90 hover:scale-100 duration-300'
+      >
+        LEAVE
+      </button>
     </>
   )
 }
 
-const PlayerCards = (props) => {
-  let player = 3
-  let [cards_array] = player_data.filter((item) => item.player_id === player)
-  // pr('cards: ', cards_array.player_cards)
-  return cards_array.player_cards[props.num]
+// Hooks
+const playCard = (props) => {
+  pr('props', props)
+}
+
+const PlayerCards = () => {
+  let player_playing = 3
+  let player_cards_svg = []
+  let player_cards_id = []
+  let [cards_array] = player_data.filter(
+    (item) => item.player_id === player_playing
+  )
+
+  for (let ele in cards_array.player_cards) {
+    cards.map((card) => {
+      if (card.name === cards_array.player_cards[ele]) {
+        player_cards_svg.push(card.svg)
+        player_cards_id.push(card.id)
+      }
+    })
+  }
+
+  return (
+    <div className='flex flex-wrap justify-center'>
+      {player_cards_svg.map((card) => {
+        return (
+          <div className='relative px-4 flex flex-wrap justify-center'>
+            <button
+              onClick={(e) => playCard(e, card)}
+              type='button'
+              className='absolute bottom-0 drop-shadow-md ease-in hover:-translate-y-6 duration-300 hover:z-10'
+            >
+              {card}
+            </button>
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 const Game = () => {
@@ -133,10 +183,10 @@ const Game = () => {
           <ActivePlayerCheck />
         </div>
         <div className='absolute text-3xl text-amber-400 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
-          Current Card: <CardInMiddle />
+          <CardInMiddle />
         </div>
         <div className='absolute text-3xl text-amber-400 bottom-8 left-1/2 -translate-x-1/2'>
-          <PlayerCards num={1} />
+          <PlayerCards />
         </div>
         <div className='absolute text-3xl text-white bottom-8 right-0 -translate-x-1/2'>
           <LeaveButton />
