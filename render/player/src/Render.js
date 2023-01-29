@@ -34,10 +34,10 @@ const player_data = [
       'blue_2',
       'green_8',
       'yellow_1',
-      'red_3',
-      'blue_2',
-      'green_8',
-      'yellow_1',
+      'green_7',
+      'red_taketwo',
+      'blue_8',
+      'yellow_0',
     ],
     player_active: 'yes',
   },
@@ -68,18 +68,22 @@ const ActivePlayerCheck = () => {
 
 const PlayerList = () => {
   return (
-    <div className='pl-4 box-border'>
-      {player_data.map((item) => {
-        return (
-          <div key={item.player_id}>
-            {item.player_name}
-            {' ['}
-            {item.player_cards.length}
-            {']'}
-          </div>
-        )
-      })}
-    </div>
+    <>
+      <div className='box-border'>
+        {player_data.map((item) => {
+          return (
+            <ul className='list-disc list-inside'>
+              <li key={item.player_id}>
+                {item.player_name}
+                {' ['}
+                {item.player_cards.length}
+                {']'}
+              </li>
+            </ul>
+          )
+        })}
+      </div>
+    </>
   )
 }
 
@@ -117,7 +121,7 @@ const playCard = (props) => {
 const PlayerCards = () => {
   let player_playing = 3
   let player_cards_svg = []
-  let player_cards_id = []
+  let player_cards_id = [] // not needed at the moment - lucas needs it later ...
   let [cards_array] = player_data.filter(
     (item) => item.player_id === player_playing
   )
@@ -173,13 +177,13 @@ const Game = () => {
           alt=''
           className='-z-10 h-screen w-screen brightness-50'
         />
-        <div className='absolute text-3xl text-amber-400 top-10 -translate-y-1/2 flex w-1/4 pl-8'>
+        <div className='absolute text-3xl text-amber-400 top-10 -translate-y-1/2 flex w-1/4 pl-8 underline font-bold tracking-tight'>
           List of Players:
-          <div className='absolute top-10 flex'>
+          <div className='absolute top-10 flex no-underline font-semibold tracking-tight'>
             <PlayerList />
           </div>
         </div>
-        <div className='absolute text-3xl text-amber-400 top-8 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+        <div className='absolute text-3xl text-amber-400 top-8 left-1/2 -translate-x-1/2 -translate-y-1/2 font-bold tracking-tight'>
           <ActivePlayerCheck />
         </div>
         <div className='absolute text-3xl text-amber-400 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
